@@ -1,0 +1,177 @@
+<!--begin.rcode, include=FALSE,
+js_x = initialise_variables(vars)
+js_b = sprintf("b = Array(%s);", paste(coefs, collapse = ', '))
+js_lp = linear_prediction(length(coefs), b = 'b', lp = 'lp')
+
+predict.binomial = "1/(1+Math.exp(-lp))"
+predict.binomial
+
+end.rcode-->
+
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><!--rinline I(title) --></title>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+  <script src="app.js"></script>
+
+<!--begin.rcode, results='asis', echo=FALSE,
+cat("<script>\n")
+end.rcode-->
+
+var dictio = [];
+dictio.active = 'eng';
+var lang1 = [], lang2 = [], lang3 = [];
+
+lang1['global'] = {};
+lang1['dictionary'] = {};
+
+<!--begin.rcode, results='asis', echo=FALSE,
+for(nl in names(labels)){
+  cat(sprintf("lang1['dictionary']['%s'] = '%s'\n", nl, labels[[nl]][['eng']]))
+}
+end.rcode-->
+
+
+lang1['instructions'] = '<h1>Instructions</h1> <p><i>In construction</i></p><hr>';
+
+dictio['eng'] = lang1;
+
+function calculate_value(){
+
+<!--begin.rcode, results='asis', echo=FALSE,
+cat(js_x)
+cat("\n\n")
+cat(js_b)
+cat("\n\n")
+cat(js_lp)
+cat("\n\n")
+cat(predict.binomial)
+end.rcode-->
+
+
+value = <!--rinline I(predict.binomial) -->
+
+return value;
+
+}
+
+function check_form(){
+  return true;
+}
+
+function uncheck_form(){
+<!--begin.rcode, results='asis', echo=FALSE,
+cat("\n")
+for(vn in names(vars)){
+  if(vn != 'constant'){
+    if(vars[[vn]]$type == "numeric"){
+      cat(sprintf("$('#%s_value').val('');\n", vn))
+    }
+    if(vars[[vn]]$type == "categoric"){
+      for(lvl in vars[[vn]]$levels){
+        cat(sprintf("$('#%s_%s').prop('checked', false);\n", vn, lvl))
+      }
+    }
+  }
+}
+cat("  $('#result').html('');\n")
+cat("  $('#panel-result').hide();\n")
+cat("  refreshUI();\n")
+end.rcode-->
+}
+
+<!--begin.rcode, results='asis', echo=FALSE,
+cat("</script>\n")
+end.rcode-->
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="row">  <!-- Main title -->
+      <div id="main_title"><div id="l_main_title">l_main_title</div></div>
+      <div id="main_subtitle"><div id="l_main_subtitle">l_main_subtitle</div></div>
+    </div>             <!-- Main title -->
+    <div class="row">  <!-- Other controls -->
+      <div class="col-md-5"></div>
+      <div class="col-md-2"><div id="info_instructions"><a href="#" id="info_1"><div id="l_instructions">l_instructions</div></a></div></div>
+      <div class="col-md-5"></div>
+    </div>             <!-- Other controls -->
+    <div class="row">  <!-- Main app -->
+      <div class="col-md-7"> <!-- Input -->
+        <div class="panel panel-primary"> <!-- Interface -->
+          <div class="panel-heading">
+            <div id="l_covariates">l_covariates</div>
+          </div>
+          <div class="panel-interface">
+            <div class="panel-body">
+              <div class="panel-covariates">
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(constant_div(vars[1]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(categoric_div(vars[2]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(numeric_div(vars[3]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(numeric_div(vars[4]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(categoric_div(vars[5]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(numeric_div(vars[6]))
+end.rcode-->
+
+<!--begin.rcode, results='asis',echo=FALSE,
+cat(categoric_div(vars[7]))
+end.rcode-->
+
+              </div>
+              <div class="col-md-12" style="height:30px;"></div>
+
+              <div class="col-md-12">
+                <button id="calculate_value" class="btn btn-primary waves-effect waves-light"><div id="l_calculate_value">l_calculate_value</div></button>
+                <button id="clean_button"class="btn btn-danger waves-effect waves-light"><div id="l_clean_button">l_clean_button</div></button>
+              </div>
+            </div>
+          </div>
+        </div>                            <!-- Interface -->
+      </div>                 <!-- Input -->
+      <div class="col-md-5"> <!-- Output -->
+        <div class="row">
+          <div class="col-md-1 "></div>
+          <div class="col-md-10 ">
+            <div class="panel-results">
+              <div class="panel-body" id="result"></div>
+            </div>
+          </div>
+          <div class="col-md-1 "></div>
+        </div>
+      </div>                 <!-- Output -->
+    </div>             <!-- Main app -->
+  </div>
+  <hr>
+
+  <div id="logos">
+
+  </div>
+
+</body>
+</html>
